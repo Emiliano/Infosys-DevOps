@@ -1,4 +1,4 @@
-# InfoSys-Teste-DevOps
+# Teste InfoSys - DevOps/Cloud
 
 ## Teste para vaga de DevOps na Infosys. 
 
