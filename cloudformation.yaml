@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  frontendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Frontend instance security group - allow HTTP and HTTPS access from all
+      GroupName: frontendSG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  backendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: >-
+        Backend instance security group - only allow SSH access from frontend
+        security group
+      GroupName: backendSG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !Ref frontendSG
+  frontend:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.nano
+      KeyName: ssh-frontend
+      SecurityGroupIds:
+        - !Ref frontendSG
+      Tags:
+        - Key: Name
+          Value: frontend
+  backend:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.nano
+      KeyName: ssh-backend
+      SecurityGroupIds:
+        - !Ref backendSG
+      Tags:
+        - Key: Name
+          Value: backend
